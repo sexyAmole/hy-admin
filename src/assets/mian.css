@@ -1,0 +1,38 @@
+body, h1, h2, h3, h4, h5, h6, hr, p, blockquote, dl, dt, dd, ul, ol, li, pre, form, fieldset, legend, button, input, textarea, th, td { margin:0; padding:0; } 
+body, button, input, select, textarea { font-size: 12px;color: #333;line-height: 1.42857143;font-family: tahoma,"microsoft yahei","\5FAE\8F6F\96C5\9ED1"!important;} 
+h1, h2, h3, h4, h5, h6{ font-size:100%; } 
+address, cite, dfn, em, var { font-style:normal; } 
+code, kbd, pre, samp { font-family:couriernew, courier, monospace; } 
+small{ font-size:12px; } 
+ul, ol { list-style:none; } 
+a { text-decoration:none; } 
+a:hover { text-decoration:none;} 
+sup { vertical-align:text-top; } 
+sub{ vertical-align:text-bottom; } 
+legend { color:#000; } 
+fieldset, img { border:0; } 
+button, input, select, textarea { font-size:100%; } 
+table { border-collapse:collapse; border-spacing:0; }
+.hy-margin-left{margin-left: 10px;}
+.el-Flower-picture{width: 50px;transition:all .25s}
+.el-Flower-picture:hover{width: 100px;}
+.el-upload__tip {margin-left: 10px;}
+.el-card__header{margin-bottom: 20px;}
+
+.hy-body-title button{margin-left: 10px;}
+/*表单 宽度*/
+/*.el-form-item{}*/
+.hui-from .el-select,.hui-from .el-input,.hui-from .el-cascader,.hui-from .el-date-editor{width:100% !important;}
+.hui-from .el-row {padding:0 !important;}
+.rui-fromDiy-row{max-width:700px;}
+
+/*//重新树样式*/
+.tree-images {width: 60px;height: 30px;border-radius: 4px;margin: 0 10px;vertical-align: middle;}
+
+.tree-input {height: 26px;width: 40px;padding: 0 10px;border-radius: 4px;border: 1px solid #dcdfe6;margin: 0 10px;}
+.el-tree-node__content{padding: 12px 0;}
+.custom-tree-node {flex: 1;display: flex;align-items: center;justify-content: space-between;font-size: 14px;padding-right: 8px;}
+
+/*重新分页样式*/
+.el-pagination{padding: 10px 0 !important ;text-align: right;}
+.el-pager li{font-size: 14px}
