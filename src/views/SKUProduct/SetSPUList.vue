@@ -3,8 +3,8 @@
  * @version: 
  * @Author: sueRimn
  * @Date: 2019-09-26 14:15:33
- * @LastEditors: zsm
- * @LastEditTime: 2020-04-23 14:54:44
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2020-12-24 14:19:28
  -->
 <template>
   <div>
@@ -15,29 +15,24 @@
       </el-breadcrumb>
     </div>
     <div class="hy-body-centent hy-body-handle">
-      <el-form
-        label-width="80px"
-        :model="commodityData"
-        ref="commodityData"
-        :rules="rules"
-        class="demo-ruleForm hui-from rui-fromDiy-row"
-      >
+      <el-form label-width="80px" :model="commodityData" ref="commodityData" :rules="rules" class="demo-ruleForm hui-from rui-fromDiy-row">
         <div class="el-card__header">
           <div class="clearfix">
             <span>分类属性设置</span>
+            <el-button type="primary" size="mini">快速添加</el-button>
           </div>
         </div>
         <el-row :gutter="20">
           <el-col :span="24">
+            <el-form-item label="兔店id">
+              <el-input autocomplete="off" placeholder="输入兔店商品id" v-model="toShopId">
+                <el-button slot="append" icon="el-icon-search" :loading="getToShoploading" @click="getToShopInfo">获取</el-button>
+              </el-input>
+            </el-form-item>
+
             <el-form-item label="所属分类" prop="CategoryId">
               <!-- :disabled="selectIs" -->
-              <el-cascader
-                v-model="category"
-                :options="CategoryList"
-                :props="attrProp"
-                @change="handleChange"
-                clearable
-              ></el-cascader>
+              <el-cascader v-model="category" :options="CategoryList" :props="attrProp" @change="handleChange" clearable></el-cascader>
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -75,24 +70,16 @@
                   <template slot-scope="scope">
                     <!-- <el-input style="width:50px" v-model="scope.row.input" placeholder="属性值"></el-input> -->
                     <!-- <el-button type="text" @click="addAttrVal(scope.row)">添加</el-button> -->
-                    <el-button type="text" size="small" @click="delAttr(1,scope.$index)">删除</el-button>
+                    <el-button type="text" size="small" @click="delAttr(1, scope.$index)">删除</el-button>
                   </template>
                 </el-table-column>
               </el-table>
               <div class="table-add">
-                <el-select
-                  placeholder="属性"
-                  v-model="choiceAttrKey"
-                  style="width: 200px !important;"
-                >
-                  <el-option
-                    v-for="(item,index) in choiceAttrList"
-                    :key="index"
-                    :label="item.name"
-                    :value="index"
-                  ></el-option>
+                <el-select placeholder="属性" v-model="choiceAttrKey" style="width: 200px !important;">
+                  <el-option v-for="(item, index) in choiceAttrList" :key="index" :label="item.name" :value="index"></el-option>
                 </el-select>
                 <el-button @click="addAttr(1)">添加属性</el-button>
+                <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="attrTextarea" @blur="arrtBlur"> </el-input>
               </div>
             </el-form-item>
             <el-form-item label="sku属性">
@@ -111,20 +98,9 @@
                 </el-table-column>
                 <el-table-column label="属性值">
                   <template slot-scope="scope">
-                    <el-button
-                      class="attr-item"
-                      v-for="(item,index) in scope.row.value"
-                      :key="item"
-                    >
-                      {{item}}
-                      <el-button
-                        type="danger"
-                        size="mini"
-                        @click="delAttrVal(scope.row,index)"
-                        icon="el-icon-delete"
-                        circle
-                        class="attr-delete"
-                      ></el-button>
+                    <el-button class="attr-item" v-for="(item, index) in scope.row.value" :key="item">
+                      {{ item }}
+                      <el-button type="danger" size="mini" @click="delAttrVal(scope.row, index)" icon="el-icon-delete" circle class="attr-delete"></el-button>
                     </el-button>
                   </template>
                 </el-table-column>
@@ -132,22 +108,13 @@
                   <template slot-scope="scope">
                     <el-input style="width:50px" v-model="scope.row.input" placeholder="属性值"></el-input>
                     <el-button type="text" @click="addAttrVal(scope.row)">添加</el-button>
-                    <el-button type="text" size="small" @click="delAttr(2,scope.$index)">删除</el-button>
+                    <el-button type="text" size="small" @click="delAttr(2, scope.$index)">删除</el-button>
                   </template>
                 </el-table-column>
               </el-table>
               <div class="table-add">
-                <el-select
-                  placeholder="属性"
-                  v-model="choiceSkuAttrKey"
-                  style="width: 200px !important;"
-                >
-                  <el-option
-                    v-for="(item,index) in choiceSkuAttrList"
-                    :key="index"
-                    :label="item.name"
-                    :value="index"
-                  ></el-option>
+                <el-select placeholder="属性" v-model="choiceSkuAttrKey" style="width: 200px !important;">
+                  <el-option v-for="(item, index) in choiceSkuAttrList" :key="index" :label="item.name" :value="index"></el-option>
                 </el-select>
                 <el-button @click="addAttr(2)">添加sku属性</el-button>
               </div>
@@ -166,11 +133,7 @@
               <el-input autocomplete="off" placeholder="输入商品名称" v-model="commodityData.GoodsName"></el-input>
             </el-form-item>
             <el-form-item label="关键词" prop="Keywords">
-              <el-input
-                autocomplete="off"
-                placeholder="关键词(多个用 | 开)"
-                v-model="commodityData.Keywords"
-              ></el-input>
+              <el-input autocomplete="off" placeholder="关键词(多个用 | 开)" v-model="commodityData.Keywords"></el-input>
             </el-form-item>
             <el-row>
               <el-col :span="8">
@@ -186,12 +149,7 @@
               <el-col :span="8">
                 <el-form-item label="销售类型" prop="SaleType">
                   <el-select v-model="commodityData.SaleType" placeholder="属性">
-                    <el-option
-                      v-for="item in saleTypeList"
-                      :key="item.value"
-                      :label="item.valueStr"
-                      :value="item.value"
-                    ></el-option>
+                    <el-option v-for="item in saleTypeList" :key="item.value" :label="item.valueStr" :value="item.value"></el-option>
                   </el-select>
                 </el-form-item>
               </el-col>
@@ -209,7 +167,7 @@
               </el-col>
               <el-col :span="8">
                 <el-form-item label="最低购买">
-                  <el-input autocomplete="off" v-model="commodityData.LowestBuyCount" type="Number" ></el-input>
+                  <el-input autocomplete="off" v-model="commodityData.LowestBuyCount" type="Number"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="8">
@@ -233,30 +191,22 @@
                 <el-table-column label="图片">
                   <template slot-scope="scope">
                     <img :src="scope.row" class="el-Flower-picture" />
-                    <p>{{scope.row}}</p>
+                    <p>{{ scope.row }}</p>
                   </template>
                 </el-table-column>
                 <el-table-column label="操作">
                   <template slot-scope="scope">
-                    <el-button type="text" size="small" @click="moveUp(BannerMap,scope.$index)">上移</el-button>
-                    <el-button type="text" size="small" @click="moveDown(BannerMap,scope.$index)">下移</el-button>
-                    <el-button
-                      type="text"
-                      size="small"
-                      @click="pictureRemove(BannerMap,scope.$index)"
-                    >删除</el-button>
+                    <el-button type="text" size="small" @click="moveUp(BannerMap, scope.$index)">上移</el-button>
+                    <el-button type="text" size="small" @click="moveDown(BannerMap, scope.$index)">下移</el-button>
+                    <el-button type="text" size="small" @click="pictureRemove(BannerMap, scope.$index)">删除</el-button>
                   </template>
                 </el-table-column>
               </el-table>
               <div class="table-add">
-                <hyUpload
-                  :uploadData="{type:1,uploadURL:'commodity/Banner'}"
-                  :multiple="true"
-                  @change="successUpload"
-                ></hyUpload>
+                <hyUpload :uploadData="{ type: 1, uploadURL: 'commodity/Banner' }" :multiple="true" @change="successUpload"></hyUpload>
               </div>
               <el-form-item label="">
-                <el-input v-model="writeLink" placeholder="输入链接" @blur="blurLink('BannerMap','writeLink')"></el-input>
+                <el-input v-model="writeLink" placeholder="输入链接" @blur="blurLink('BannerMap', 'writeLink')"></el-input>
               </el-form-item>
             </el-form-item>
             <el-form-item label="详情图">
@@ -269,39 +219,26 @@
                 </el-table-column>
                 <el-table-column label="操作">
                   <template slot-scope="scope">
-                    <el-button type="text" size="small" @click="moveUp(detailMap,scope.$index)">上移</el-button>
-                    <el-button type="text" size="small" @click="moveDown(detailMap,scope.$index)">下移</el-button>
-                    <el-button
-                      type="text"
-                      size="small"
-                      @click="pictureRemove(detailMap,scope.$index)"
-                    >删除</el-button>
+                    <el-button type="text" size="small" @click="moveUp(detailMap, scope.$index)">上移</el-button>
+                    <el-button type="text" size="small" @click="moveDown(detailMap, scope.$index)">下移</el-button>
+                    <el-button type="text" size="small" @click="pictureRemove(detailMap, scope.$index)">删除</el-button>
                   </template>
                 </el-table-column>
               </el-table>
               <div class="table-add">
-                <hyUpload
-                  :uploadData="{type:2,uploadURL:'commodity/detail'}"
-                   :multiple="true"
-                  @change="successUpload"
-                ></hyUpload>
+                <hyUpload :uploadData="{ type: 2, uploadURL: 'commodity/detail' }" :multiple="true" @change="successUpload"></hyUpload>
               </div>
               <el-form-item label="">
-                <el-input v-model="writeLink2" placeholder="输入链接" @blur="blurLink('detailMap','writeLink2')"></el-input>
+                <el-input v-model="writeLink2" placeholder="输入链接" @blur="blurLink('detailMap', 'writeLink2')"></el-input>
               </el-form-item>
             </el-form-item>
             <el-form-item label="缩略图">
               <img v-if="commodityData.ImgUrl" :src="commodityData.ImgUrl" class="thumbnail-img" />
-              <hyUpload
-                :uploadData="{type:3,uploadURL:'commodity/thumbnail'}"
-                 :multiple="false"
-                 :limit="1"
-                @change="successUpload"
-              ></hyUpload>
+              <hyUpload :uploadData="{ type: 3, uploadURL: 'commodity/thumbnail' }" :multiple="false" :limit="1" @change="successUpload"></hyUpload>
             </el-form-item>
             <el-form-item label="">
-                <el-input v-model="commodityData.ImgUrl" placeholder="输入链接"></el-input>
-              </el-form-item>
+              <el-input v-model="commodityData.ImgUrl" placeholder="输入链接"></el-input>
+            </el-form-item>
           </el-col>
         </el-row>
       </el-form>
@@ -343,13 +280,10 @@
 }
 </style>
 <script>
-import {
-  QueryAllGoodsType,
-  QueryGoodsAttrByTypeId,
-  QuerySaleType,
-  QueryGoodsInfo,
-  EditGoodsInfo
-} from "../../common/axios.config.js";
+import { QueryAllGoodsType, QueryGoodsAttrByTypeId, QuerySaleType, QueryGoodsInfo, EditGoodsInfo } from "../../common/axios.config.js";
+// import { uploadQiniu, getBase64Image } from "@/common/upload-qiniu.js";
+import { getGoodxt, verifyImageSuffix } from "@/common/getToShopTool.js";
+
 import { getQueryString } from "../../common/Util.js";
 import hyUpload from "../../component/upload/index";
 export default {
@@ -366,8 +300,10 @@ export default {
         children: "Children",
         checkStrictly: true
       },
-      writeLink:'',
-      writeLink2:'',
+      attrTextarea: "",
+      toShopId: "",
+      writeLink: "",
+      writeLink2: "",
       category: [], //选择的属性值
       choiceSkuAttrList: [],
       choiceSkuAttrKey: "",
@@ -390,7 +326,7 @@ export default {
         ImgUrl: "",
         IsShow: false,
         Keywords: "",
-        SaleType: "",
+        SaleType: 1,
         SkuAttrListJson: "",
         IsTodaySend: false,
         LowestBuyCount: "1",
@@ -399,24 +335,95 @@ export default {
         TypeId: ""
       },
       loading: true, //加载动画
+      getToShoploading: false,
       rules: {
         Sort: [{ required: true, message: "输入排序", trigger: "blur" }],
-        SaleType: [
-          { required: true, message: "输入销售类型", trigger: "blur" }
-        ],
+        SaleType: [{ required: true, message: "输入销售类型", trigger: "blur" }],
         Keywords: [{ required: true, message: "输入关键词", trigger: "blur" }],
         GoodsName: [{ required: true, message: "输入名称", trigger: "blur" }]
       }
     };
   },
   methods: {
-    blurLink(link,blurModel){
-      this[link].push(this[blurModel])
-      this[blurModel] = ""
+    // 属性失去焦点
+    arrtBlur() {
+      if (this.attrTextarea) {
+        const column = this.attrTextarea.split(/[\s\n]/);
+        column.forEach((item) => {
+          item = item.replace(/\s*/g, "").replace(/[【｜】]/g, "");
+          if (item) {
+            const row = item.split("：");
+            this.attrList.push({
+              name: row[0],
+              value: row[1]
+            });
+          }
+        });
+        this.attrTextarea = "";
+      }
+    },
+    //获取兔店商品信息
+    getToShopInfo() {
+      const self = this;
+      if (!this.toShopId) {
+        return this.$message.warning("输入兔店商品ID");
+      }
+      this.getToShoploading = true;
+      this.$axios
+        .get("https://api.twoshop.com.cn/api/rest/product/V1.6.3/info", {
+          params: { id: this.toShopId }
+        })
+        .then((res) => {
+          this.getToShoploading = false;
+
+          if (res) {
+            const resData = res.data;
+            // self.BannerMap
+            // 循环追加轮播图片
+            resData.productAlbumVos.forEach((item) => {
+              self.BannerMap.push(item.url);
+              // uploadQiniu(item.url, function(ret) {
+              //   // console.log(res.key)
+              //   self.BannerMap.push("https://image.huayixh.com/" + ret.key);
+              // });
+            });
+            this.commodityData.GoodsName = resData.name;
+
+            //设置sku属性
+            const skuList = JSON.parse(resData.specification);
+            const skuAttrList = skuList.map((item) => {
+              return {
+                name: item.name,
+                value: item.valueVoList.map((el) => el.value)
+              };
+            });
+            this.skuAttrList = skuAttrList;
+            this.commodityData.SaleType = 0;
+            this.commodityData.Sort = 1;
+            this.commodityData.IsShow = true;
+            //获取详情图片
+            getGoodxt(resData.textPic, function(urls) {
+              urls.desUrls.forEach((item) => {
+                if (verifyImageSuffix(item)) {
+                  self.detailMap.push(item);
+                  // uploadQiniu(item, function(ret) {
+                  //   // console.log(res.key)
+                  //   self.detailMap.push("https://image.huayixh.com/" + ret.key);
+                  // });
+                }
+              });
+            });
+            // console.log(skuAttrList);
+          }
+        });
+    },
+    blurLink(link, blurModel) {
+      this[link].push(this[blurModel]);
+      this[blurModel] = "";
     },
     categoryInfo() {
       let that = this;
-      that.$axios.post(QueryAllGoodsType, {}).then(res => {
+      that.$axios.post(QueryAllGoodsType, {}).then((res) => {
         if (res) {
           that.CategoryList = res;
           that.loading = false;
@@ -460,7 +467,7 @@ export default {
         if (data[i].TypeId == typeId) {
           let PathID = data[i].Path.split("-");
           PathID.shift();
-          PathID = PathID.map(item => {
+          PathID = PathID.map((item) => {
             return Number(item);
           });
           that.category = PathID;
@@ -516,11 +523,11 @@ export default {
       let typeID = item[item.length - 1];
       let that = this;
       that.commodityData.TypeId = typeID;
-      that.$axios.post(QueryGoodsAttrByTypeId, { typeId: typeID }).then(res => {
+      that.$axios.post(QueryGoodsAttrByTypeId, { typeId: typeID }).then((res) => {
         let attrData = [],
           skuAttrData = [];
         //循环去除属性
-        res.forEach(element => {
+        res.forEach((element) => {
           if (element.IsSku) {
             if (!that.SkuAttrListJsonKey.includes(element.AttrName)) {
               skuAttrData.push({
@@ -545,7 +552,7 @@ export default {
     //查询销售方式
     QuerySaleType() {
       let that = this;
-      that.$axios.post(QuerySaleType, {}).then(res => {
+      that.$axios.post(QuerySaleType, {}).then((res) => {
         if (res) {
           that.saleTypeList = res;
         }
@@ -554,7 +561,7 @@ export default {
     // 提交商品
     submitForm() {
       let that = this;
-      that.$refs["commodityData"].validate(valid => {
+      that.$refs["commodityData"].validate((valid) => {
         if (valid) {
           let commodityData = that.commodityData;
           if (!that.BannerMap.length) {
@@ -580,20 +587,23 @@ export default {
                 value: attr[i].value
               });
             }
-            commodityData.AttrListJson = JSON.stringify(attrData).replace(RegExp("name", "g"),"Name").replace(RegExp("value", "g"),"Value");
-            commodityData.SkuAttrListJson = JSON.stringify(skuAttrData).replace(RegExp("name", "g"),"Name").replace(RegExp("value", "g"),"Value");
+            commodityData.AttrListJson = JSON.stringify(attrData)
+              .replace(RegExp("name", "g"), "Name")
+              .replace(RegExp("value", "g"), "Value");
+            commodityData.SkuAttrListJson = JSON.stringify(skuAttrData)
+              .replace(RegExp("name", "g"), "Name")
+              .replace(RegExp("value", "g"), "Value");
             commodityData.Banner = that.BannerMap.join(",");
             commodityData.Content = that.detailMap.join(",");
             commodityData.Sort = parseInt(commodityData.Sort);
-            that.$axios.post(EditGoodsInfo, { jsonData: JSON.stringify(commodityData) })
-              .then(res => {
-                if (res.Code == 200) {
-                  that.$message.success("添加成功");
-                  sessionStorage.setItem("ifRefresh",true)
-                  that.$router.push("/Web/SKUProduct/SPUList");
-                  // that.$router.go(-1)
-                }
-              });
+            that.$axios.post(EditGoodsInfo, { jsonData: JSON.stringify(commodityData) }).then((res) => {
+              if (res.Code == 200) {
+                that.$message.success("添加成功");
+                sessionStorage.setItem("ifRefresh", true);
+                that.$router.push("/Web/SKUProduct/SPUList");
+                // that.$router.go(-1)
+              }
+            });
           }
         } else {
           that.$message.error("请完善基本信息");
@@ -602,29 +612,27 @@ export default {
     },
     queryGoodsInfo(goodsId) {
       let that = this;
-      that.$axios
-        .post(QueryGoodsInfo, { goodsId: parseInt(goodsId) })
-        .then(res => {
-          if (res.Code == 200) {
-            that.commodityData = res.Data;
-            let SkuAttrListJson = JSON.parse(res.Data.SkuAttrListJson.replace(RegExp("Name", "g"),"name").replace(RegExp("Value", "g"),"value"));
-            let AttrListJson = JSON.parse(res.Data.AttrListJson.replace(RegExp("Name", "g"),"name").replace(RegExp("Value", "g"),"value"));
-            for (let i = 0; i < SkuAttrListJson.length; i++) {
-              SkuAttrListJson[i].input = "";
-              that.SkuAttrListJsonKey.push(SkuAttrListJson[i].name);
-            }
-            for (let i = 0; i < AttrListJson.length; i++) {
-              that.AttrListJsonKey.push(AttrListJson[i].name);
-            }
-            that.attrList = AttrListJson;
-            that.skuAttrList = SkuAttrListJson;
-            that.BannerMap = res.Data.Banner.split(",");
-            that.detailMap = res.Data.Content.split(",");
-            setTimeout(() => {
-              that.tree(that.CategoryList, res.Data.TypeId);
-            }, 500);
+      that.$axios.post(QueryGoodsInfo, { goodsId: parseInt(goodsId) }).then((res) => {
+        if (res.Code == 200) {
+          that.commodityData = res.Data;
+          let SkuAttrListJson = JSON.parse(res.Data.SkuAttrListJson.replace(RegExp("Name", "g"), "name").replace(RegExp("Value", "g"), "value"));
+          let AttrListJson = JSON.parse(res.Data.AttrListJson.replace(RegExp("Name", "g"), "name").replace(RegExp("Value", "g"), "value"));
+          for (let i = 0; i < SkuAttrListJson.length; i++) {
+            SkuAttrListJson[i].input = "";
+            that.SkuAttrListJsonKey.push(SkuAttrListJson[i].name);
           }
-        });
+          for (let i = 0; i < AttrListJson.length; i++) {
+            that.AttrListJsonKey.push(AttrListJson[i].name);
+          }
+          that.attrList = AttrListJson;
+          that.skuAttrList = SkuAttrListJson;
+          that.BannerMap = res.Data.Banner.split(",");
+          that.detailMap = res.Data.Content.split(",");
+          setTimeout(() => {
+            that.tree(that.CategoryList, res.Data.TypeId);
+          }, 500);
+        }
+      });
     }
   },
   mounted: function() {

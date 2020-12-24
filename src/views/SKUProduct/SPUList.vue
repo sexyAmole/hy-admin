@@ -3,8 +3,8 @@
  * @version: 
  * @Author: sueRimn
  * @Date: 2019-09-26 14:15:33
- * @LastEditors: zsm
- * @LastEditTime: 2020-04-24 15:07:11
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2020-12-24 11:48:05
  -->
 <template>
   <div>
@@ -32,15 +32,13 @@
         <el-form-item label="状态">
           <el-select v-model="searchData.GoodsStatus" placeholder="商品状态" style="width:100%">
             <el-option value label="全部">全部</el-option>
-            <el-option v-for="item in goodsStatusData" :key="item.value" :value="item.value" :label="item.valueStr">
-            </el-option>
+            <el-option v-for="item in goodsStatusData" :key="item.value" :value="item.value" :label="item.valueStr"> </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="销售方式">
           <el-select v-model="searchData.SaleType" placeholder="商品销售方式" style="width:100%">
             <el-option value label="全部">全部</el-option>
-            <el-option v-for="item in saleTypeData" :key="item.value" :value="item.value" :label="item.valueStr">
-            </el-option>
+            <el-option v-for="item in saleTypeData" :key="item.value" :value="item.value" :label="item.valueStr"> </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="是否显示">
@@ -66,15 +64,14 @@
         </el-table-column>
         <el-table-column label="属性" width="220px">
           <template slot-scope="scope">
-            <p v-for="(item,index) in scope.row.AttrListJson" :key="index">{{item.name || item.Name}} :
-              {{item.value || item.Value}}</p>
+            <p v-for="(item, index) in scope.row.AttrListJson" :key="index">{{ item.name || item.Name }} : {{ item.value || item.Value }}</p>
           </template>
         </el-table-column>
         <el-table-column label="SKU属性" width="120px">
           <template slot-scope="scope">
-            <p v-for="(item,index) in scope.row.SkuAttrListJson" :key="index">
-              {{item.name || item.Name}} :
-              <span v-for="(items,indexs) in item.value || item.Value" :key="indexs">{{items}}</span>
+            <p v-for="(item, index) in scope.row.SkuAttrListJson" :key="index">
+              {{ item.name || item.Name }} :
+              <span v-for="(items, indexs) in item.value || item.Value" :key="indexs">{{ items }}</span>
             </p>
           </template>
         </el-table-column>
@@ -84,36 +81,26 @@
         <el-table-column label="排序" prop="Sort" width="80px" align="center"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <router-link style="margin-right:6px" :to="'/Web/SKUProduct/EditSPUList/edit?id='+scope.row.GoodsId">
+            <router-link style="margin-right:6px" :to="'/Web/SKUProduct/EditSPUList/edit?id=' + scope.row.GoodsId">
               <el-link type="primary">编辑</el-link>
             </router-link>
-            <el-link type="primary" @click="itemUpDownShelf(scope.row.GoodsId,!scope.row.GoodsStatus)">
-              {{!scope.row.GoodsStatus?"下架":"上架"}}</el-link>
+            <el-link type="primary" @click="itemUpDownShelf(scope.row.GoodsId, !scope.row.GoodsStatus)"> {{ !scope.row.GoodsStatus ? "下架" : "上架" }}</el-link>
             <el-link type="primary" @click="itemDel(scope.row.GoodsId)">删除</el-link>
-            <el-link type="primary" :href="'/Web/SKUProduct/SKUList?id='+scope.row.GoodsId">SKU</el-link>
+            <el-link type="primary" :href="'/Web/SKUProduct/SKUList?id=' + scope.row.GoodsId">SKU</el-link>
           </template>
         </el-table-column>
       </el-table>
     </div>
     <div class="page-box">
-      <el-pagination @current-change="handleCurrentChange" background page-size="10"
-        layout="total,prev,pager,next,jumper" :total="pageTotal" :current-page="searchData.PageIndex"></el-pagination>
+      <el-pagination @current-change="handleCurrentChange" background page-size="10" layout="total,prev,pager,next,jumper" :total="pageTotal" :current-page="searchData.PageIndex"></el-pagination>
     </div>
   </div>
 </template>
-<style lang="less" scoped>
-</style>
+<style lang="less" scoped></style>
 <script>
-import {
-  QueryGoodsInfoList,
-  QuerySaleType,
-  QueryGoodsStatus,
-  QueryAllGoodsType,
-  UpdateGoodsStatus,
-  DelCategory
-} from "../../common/axios.config.js";
+import { QueryGoodsInfoList, QuerySaleType, QueryGoodsStatus, QueryAllGoodsType, UpdateGoodsStatus, DelCategory } from "../../common/axios.config.js";
 export default {
-  data () {
+  data() {
     return {
       CategoryList: [], //分类数据
       saleTypeData: [], // 商品销售方式
@@ -142,7 +129,7 @@ export default {
   components: {},
   methods: {
     //删除
-    itemDel (goodsId) {
+    itemDel(goodsId) {
       let that = this;
       that
         .$confirm("此操作将永久删除, 是否继续?", "提示", {
@@ -156,42 +143,42 @@ export default {
           };
           that.$axios
             .post(DelCategory, params)
-            .then(res => {
+            .then((res) => {
               if (res) {
                 that.$message.success("删除成功");
                 that.queryGoodsInfoList();
               }
             })
-            .catch(() => { });
+            .catch(() => {});
         });
     },
-    categoryInfo () {
+    categoryInfo() {
       let that = this;
-      that.$axios.post(QueryAllGoodsType, { params: {} }).then(res => {
+      that.$axios.post(QueryAllGoodsType, { params: {} }).then((res) => {
         that.CategoryList = res;
       });
     },
     // 商品销售方式
-    querySaleType () {
+    querySaleType() {
       let that = this;
-      that.$axios.post(QuerySaleType, {}).then(res => {
+      that.$axios.post(QuerySaleType, {}).then((res) => {
         that.saleTypeData = res;
       });
     },
     // 商品状态
-    queryGoodsStatus () {
+    queryGoodsStatus() {
       let that = this;
-      that.$axios.post(QueryGoodsStatus, {}).then(res => {
+      that.$axios.post(QueryGoodsStatus, {}).then((res) => {
         that.goodsStatusData = res;
       });
     },
     // 获取列表
-    queryGoodsInfoList () {
+    queryGoodsInfoList() {
       let that = this;
       let params = JSON.parse(JSON.stringify(this.searchData));
       params.TypeId = params.TypeId && params.TypeId[params.TypeId.length - 1];
       localStorage.setItem("spu_params", JSON.stringify(params));
-      that.$axios.post(QueryGoodsInfoList, params).then(res => {
+      that.$axios.post(QueryGoodsInfoList, params).then((res) => {
         let Datas = res.Datas;
         for (let i = 0; i < res.Datas.length; i++) {
           Datas[i].AttrListJson = JSON.parse(Datas[i].AttrListJson);
@@ -203,22 +190,20 @@ export default {
       });
     },
     // 上下架
-    itemUpDownShelf (goodsId, goodsStatus) {
+    itemUpDownShelf(goodsId, goodsStatus) {
       let that = this;
-      that.$axios
-        .post(UpdateGoodsStatus, { goodsId, goodsStatus })
-        .then(res => {
-          if (res) {
-            that.$message.success(goodsStatus ? "下架成功" : "上架成功");
-            that.queryGoodsInfoList();
-          }
-        });
+      that.$axios.post(UpdateGoodsStatus, { goodsId, goodsStatus }).then((res) => {
+        if (res) {
+          that.$message.success(goodsStatus ? "下架成功" : "上架成功");
+          that.queryGoodsInfoList();
+        }
+      });
     },
-    handleCurrentChange (index) {
+    handleCurrentChange(index) {
       this.searchData.PageIndex = index;
       this.queryGoodsInfoList();
     },
-    resetForm () {
+    resetForm() {
       this.searchData = {
         PageIndex: 1,
         GoodsStatus: "",
@@ -230,14 +215,14 @@ export default {
       };
     }
   },
-  mounted: function () {
-    this.$nextTick(function () {
+  mounted: function() {
+    this.$nextTick(function() {
       this.querySaleType();
       this.queryGoodsStatus();
       this.categoryInfo();
       this.queryGoodsInfoList();
     });
-  },
+  }
   // beforeRouteEnter:function(){
   //   console.log("ss");
   // },
